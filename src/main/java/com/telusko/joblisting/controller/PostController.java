@@ -12,9 +12,8 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
-public class PostController
-{
+@CrossOrigin(origins = "*", allowedHeaders = "*") 
+public class PostController {
 
     @Autowired
     PostRepository repo;

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Listings Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #2563eb;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .search-section {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 50%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .search-btn {
+            padding: 12px 24px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .post-project-btn {
+            padding: 12px 24px;
+            background-color: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post-project-btn:hover {
+            background-color: #059669;
+        }
+
+        .projects-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .project-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            color: #1f2937;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background-color: #e5e7eb;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .experience {
+            color: #6b7280;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .view-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Project Listings Portal</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="search-section">
+            <input type="text" class="search-input" placeholder="Search for projects...">
+            <button class="search-btn">Search</button>
+            <button class="post-project-btn">Add Project</button>
+        </div>
+
+        <div class="projects-container">
+            <!-- Projects will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Modal for posting new project -->
+    <div class="modal" id="postProjectModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Project</h2>
+            <form id="postProjectForm">
+                <div class="form-group">
+                    <label for="profile">Project Title</label>
+                    <input type="text" id="profile" required>
+                </div>
+                <div class="form-group">
+                    <label for="desc">Description</label>
+                    <textarea id="desc" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="exp">Project Duration (months)</label>
+                    <input type="number" id="exp" required>
+                </div>
+                <div class="form-group">
+                    <label>Technologies Used</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="react" value="React">
+                            <label for="react">React</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="node" value="Node.js">
+                            <label for="node">Node.js</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="python" value="Python">
+                            <label for="python">Python</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="java" value="Java">
+                            <label for="java">Java</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="mongodb" value="MongoDB">
+                            <label for="mongodb">MongoDB</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="mysql" value="MySQL">
+                            <label for="mysql">MySQL</label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">Submit Project</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080';
+        
+        // DOM Elements
+        const projectsContainer = document.querySelector('.projects-container');
+        const searchInput = document.querySelector('.search-input');
+        const searchBtn = document.querySelector('.search-btn');
+        const postProjectBtn = document.querySelector('.post-project-btn');
+        const modal = document.getElementById('postProjectModal');
+        const closeBtn = document.querySelector('.close');
+        const postProjectForm = document.getElementById('postProjectForm');
+
+        // Fetch and display all projects
+        async function fetchProjects() {
+            try {
+                projectsContainer.innerHTML = '<div class="loading">Loading projects...</div>';
+                const response = await fetch(`${API_BASE_URL}/allPosts`);
+                const projects = await response.json();
+                displayProjects(projects);
+            } catch (error) {
+                projectsContainer.innerHTML = '<div class="loading">Error loading projects. Please try again later.</div>';
+            }
+        }
+
+        // Search projects
+        async function searchProjects(searchText) {
+            try {
+                projectsContainer.innerHTML = '<div class="loading">Searching...</div>';
+                const response = await fetch(`${API_BASE_URL}/posts/${searchText}`);
+                const projects = await response.json();
+                displayProjects(projects);
+            } catch (error) {
+                projectsContainer.innerHTML = '<div class="loading">Error searching projects. Please try again later.</div>';
+            }
+        }
+
+        // Display projects in the container
+        function displayProjects(projects) {
+            if (!projects.length) {
+                projectsContainer.innerHTML = '<div class="loading">No projects found.</div>';
+                return;
+            }
+
+            projectsContainer.innerHTML = projects.map(project => `
+                <div class="project-card">
+                    <div class="project-header">
+                        <div>
+                            <h2 class="project-title">${project.profile}</h2>
+                        </div>
+                    </div>
+                    <p>${project.desc}</p>
+                    <div class="project-tags">
+                        ${project.techs.map(tech => `<span class="tag">${tech}</span>`).join('')}
+                    </div>
+                    <div class="project-footer">
+                        <span class="experience">${project.exp} months duration</span>
+                        <button class="view-btn">View Details</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Post a new project
+        async function postProject(projectData) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/post`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(projectData)
+                });
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                throw new Error('Error posting project');
+            }
+        }
+
+        // Event Listeners
+        searchBtn.addEventListener('click', () => {
+            const searchText = searchInput.value.trim();
+            if (searchText) {
+                searchProjects(searchText);
+            } else {
+                fetchProjects();
+            }
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const searchText = searchInput.value.trim();
+                if (searchText) {
+                    searchProjects(searchText);
+                } else {
+                    fetchProjects();
+                }
+            }
+        });
+
+        postProjectBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        postProjectForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const selectedTechs = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+            
+            const projectData = {
+                profile: document.getElementById('profile').value,
+                desc: document.getElementById('desc').value,
+                exp: parseInt(document.getElementById('exp').value),
+                techs: selectedTechs
+            };
+
+            try {
+                await postProject(projectData);
+                modal.style.display = 'none';
+                postProjectForm.reset();
+                fetchProjects();
+            } catch (error) {
+                alert('Error posting project. Please try again.');
+            }
+        });
+
+        // Initial load
+        fetchProjects();
+    </script>
+</body>
+</html>
